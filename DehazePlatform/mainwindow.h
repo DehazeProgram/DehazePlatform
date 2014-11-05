@@ -3,14 +3,17 @@
 
 #include <QMainWindow>
 
+
 namespace Ui {
 class MainWindow;
 }
 class QGraphicsScene;
 class QGraphicsPixmapItem;
+class ImageManager;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    friend class ImageManager;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -18,12 +21,15 @@ public:
 
 private slots:
     void on_actionOpen_triggered();
-
+    void OpenImage(QString &imagePath);
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     QGraphicsPixmapItem *pxmapItem;
-    QToolBar *toolbar;
+    ImageManager *imgManager;
+
+
+
 };
 
 #endif // MAINWINDOW_H

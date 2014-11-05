@@ -5,22 +5,19 @@
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <imagemanager.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     scene(new QGraphicsScene(this)),
     pxmapItem(NULL),
-    toolbar(new QToolBar("tools"))
+    imgManager(NULL)
 {
-    this->addToolBar(Qt::LeftToolBarArea,toolbar);
     ui->setupUi(this);
     ui->mainToolBar->addAction(ui->actionOpen);
     ui->graphicsView->setScene(scene);
-
-    toolbar->addAction("Dehaze");
-    toolbar->addAction("Autocolor");
-    toolbar->addAction("Autocontract");
+    ui->treeView->header()->hide();
 }
 
 MainWindow::~MainWindow()
@@ -30,10 +27,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    if(imgManager)
+    {
+        imgManager =NULL;
+    }
     QString imagePath = QFileDialog::getOpenFileName(this,"Selected a haze image");
+    imgManager = new ImageManager(imagePath,this);
+    ui->treeView->setModel((QAbstractItemModel*)(imgManager->getModel()) );
+    imgManager->OpenImage();
+    ui->treeView->expandAll();
+}
+
+void MainWindow::OpenImage(QString &imagePath)
+{
     qDebug()<<imagePath;
     QPixmap p =  QPixmap(imagePath);
     if (pxmapItem)
         scene->removeItem(pxmapItem);
     pxmapItem = scene->addPixmap(p);
+    ui->graphicsView->fitInView(pxmapItem,Qt::KeepAspectRatio);
+    ui->graphicsView->ensureVisible(pxmapItem);
 }
+
+
+
+
