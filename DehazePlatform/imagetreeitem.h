@@ -6,11 +6,24 @@
 class ImageTreeItem : public QStandardItem
 {
 public:
-    ImageTreeItem(QString &text,ImageTreeItem*p=0);
-    ImageTreeItem* parent() const {return parentItem;}
+    enum ItemType{
+        IMAGE_ROOT,
+        RED,
+        GREEN,
+        BLUE
+    };
+    ImageTreeItem(ItemType itype,ImageTreeItem*p=0,QString &text = QString(""));
+    const ImageTreeItem* parent() const {return parentItem;}
+    const ItemType getType() const{return _itemType;}
 
 private:
+    void initText(QString &text);
+    void initFont();
+    void initColor();
+
     ImageTreeItem* parentItem;
+    ItemType _itemType;
+    QString text;
 };
 
 #endif // IMAGETREEITEM_H

@@ -6,6 +6,7 @@ ImageTreeModel::ImageTreeModel(QObject *parent):
     QStandardItemModel(parent),
     rootItem(NULL)
 {
+
 }
 
 ImageTreeModel::~ImageTreeModel()
@@ -14,15 +15,16 @@ ImageTreeModel::~ImageTreeModel()
         delete rootItem;
 }
 
+
 void ImageTreeModel::initImageTreeModel(QString &text)
 {
     if(!rootItem)
         rootItem =NULL;
-    rootItem = new ImageTreeItem(text);
+    rootItem = new ImageTreeItem(ImageTreeItem::IMAGE_ROOT,NULL,text);
 
-    ImageTreeItem* redItem = new ImageTreeItem(QString("red"),rootItem);
-    ImageTreeItem* greenItem = new ImageTreeItem(QString("green"),rootItem);
-    ImageTreeItem* blueItem = new ImageTreeItem(QString("blue"),rootItem);
+    ImageTreeItem* redItem = new ImageTreeItem(ImageTreeItem::RED,rootItem);
+    ImageTreeItem* greenItem = new ImageTreeItem(ImageTreeItem::GREEN,rootItem);
+    ImageTreeItem* blueItem = new ImageTreeItem(ImageTreeItem::BLUE,rootItem);
 
     rootItem->appendRow(redItem);
     rootItem->appendRow(greenItem);
