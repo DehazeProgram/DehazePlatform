@@ -38,6 +38,9 @@ private:
     QGraphicsScene *scene;
     QAction* remove;
 
+    void ShowImage(QPixmap &pixmap);
+    void ConvertCvMatToGrayPixmaps(cv::Mat &mat, QVector<QPixmap> &pixmaps);
+    QImage const copy_mat_to_qimage(cv::Mat const &mat);
 };
 
 #endif // IMAGEMANAGER_H

@@ -5,6 +5,8 @@
 #include <opencv2/opencv.hpp>
 #include <QMenu>
 #include <QAction>
+#include <QVector>
+#include <QRgb>
 
 ImageManager::ImageManager(QString &imgPath, MainWindow *w):
     QObject(NULL),
@@ -60,38 +62,33 @@ void ImageManager::ShowChannelImage(QModelIndex index)
      * this slot function is connected with item's
      * doubleclicks signal in mainwindow.cpp */
 
-
-    //split image to rbg as simple channel mats named red,green,blue
-    cv::Mat red = cv::Mat(image.rows,image.cols,CV_8UC1);
-    cv::Mat green = cv::Mat(image.rows,image.cols,CV_8UC1);
-    cv::Mat blue = cv::Mat(image.rows,image.cols,CV_8UC1);
-    std::vector<cv::Mat> channelImages;
-    cv::split(image,channelImages);
-    red = channelImages[0];
-    green = channelImages[1];
-    blue = channelImages[2];
-
     //create simple channel image as QImage set to scene
+    QVector<QPixmap> channelPixmaps;
+    QPixmap redPixmap = QPixmap();
+    QPixmap greenPixmap = QPixmap();
+    QPixmap bluePixmap = QPixmap();
+    channelPixmaps.push_back(redPixmap);
+    channelPixmaps.push_back(greenPixmap);
+    channelPixmaps.push_back(bluePixmap);
+
+    ConvertCvMatToGrayPixmaps(image,channelPixmaps);
     ImageTreeItem* item = (ImageTreeItem*)(model->itemFromIndex(index));
-    if(item->getType() == ImageTreeItem::RED)
+    if(item->getType() == ImageTreeItem::IMAGE_ROOT)
     {
-//        cv::imshow("red",red);
-//        QImage image = QImage(red.data,red.rows,red.cols,QImage::Format_Indexed8);
-        QPixmap pixmap;
-        qDebug()<<pixmap.loadFromData(red.data,Qt::AutoColor);
-        if (window->pxmapItem)
-            scene->removeItem((QGraphicsItem*)(window->pxmapItem));
-        window->pxmapItem = scene->addPixmap(pixmap);
-        window->ui->graphicsView->fitInView((QGraphicsItem *)window->pxmapItem,Qt::KeepAspectRatio);
-        window->ui->graphicsView->ensureVisible((QGraphicsItem *)window->pxmapItem);
+        QPixmap pixmap =QPixmap(imagePath);
+        ShowImage(pixmap);
+    }
+    else if(item->getType() == ImageTreeItem::RED)
+    {
+        ShowImage(channelPixmaps[0]);
     }
     else if (item->getType() == ImageTreeItem::BLUE)
     {
-
+        ShowImage(channelPixmaps[1]);
     }
     else if (item->getType() == ImageTreeItem::GREEN)
     {
-
+        ShowImage(channelPixmaps[2]);
     }
 }
 
@@ -100,5 +97,53 @@ void ImageManager::RemoveImage()
     model->clear();
     scene->clear();
     image.release();
+}
+
+void ImageManager::ShowImage(QPixmap &pixmap)
+{
+    if (window->pxmapItem)
+        scene->removeItem((QGraphicsItem*)(window->pxmapItem));
+    window->pxmapItem = scene->addPixmap(pixmap);
+    window->ui->graphicsView->setScene(scene);
+    window->ui->graphicsView->fitInView((QGraphicsItem *)window->pxmapItem,Qt::KeepAspectRatio);
+    window->ui->graphicsView->ensureVisible((QGraphicsItem *)window->pxmapItem);
+}
+
+void ImageManager::ConvertCvMatToGrayPixmaps(cv::Mat &mat,QVector<QPixmap> &pixmaps)
+{
+    assert(mat.channels() == 3 && mat.type() == CV_8UC3);
+    QImage img = copy_mat_to_qimage(mat);
+    QSize imgSize = img.size();
+    int width = img.width();
+    int height = img.height();
+    QImage rImg(imgSize, QImage::Format_RGB888);
+    QImage gImg(imgSize, QImage::Format_RGB888);
+    QImage bImg(imgSize, QImage::Format_RGB888);
+
+    for(int i = 0; i < width; i++)
+    {
+        for(int j = 0; j < height; j++)
+        {
+            QRgb rgb = img.pixel(i,j);
+            rImg.setPixel(i,j,qRgb(qBlue(rgb),qBlue(rgb),qBlue(rgb)));
+            gImg.setPixel(i,j,qRgb(qGreen(rgb),qGreen(rgb),qGreen(rgb)));
+            bImg.setPixel(i,j,qRgb(qRed(rgb),qRed(rgb),qRed(rgb)));
+        }
+    }
+
+    pixmaps[0] = QPixmap::fromImage(rImg);
+    pixmaps[1] = QPixmap::fromImage(gImg);
+    pixmaps[2] = QPixmap::fromImage(bImg);
+
+}
+
+const QImage ImageManager::copy_mat_to_qimage(const cv::Mat &mat)
+{
+    QImage image(mat.cols, mat.rows, QImage::Format_RGB888);
+    for (int i = 0; i != mat.rows; ++i)
+    {
+        memcpy(image.scanLine(i), mat.ptr(i), image.bytesPerLine() );
+    }
+    return image;
 }
 
