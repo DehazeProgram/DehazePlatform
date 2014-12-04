@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addAction(ui->actionOpen);
     ui->treeView->header()->hide();
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->dockWidget->setWindowTitle(QString("Image"));
+    ui->darkChannelDock->setWindowTitle(QString("DarkChannelDehazor"));
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +38,7 @@ void MainWindow::on_actionOpen_triggered()
     ui->treeView->setModel((QAbstractItemModel*)(imgManager->getModel()) );
     imgManager->OpenImage();
     ui->treeView->expandAll();
+
     connect(ui->treeView,SIGNAL(doubleClicked(QModelIndex)),imgManager,SLOT(ShowChannelImage(QModelIndex)));
 
 }
@@ -54,4 +57,16 @@ void MainWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
 {
     QModelIndex index = ui->treeView->indexAt(pos);
     imgManager->onContextMenu(index);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    /*make the image change the size when mainwindow change the size*/
+     QWidget::resizeEvent(event);
+     if(pxmapItem)
+     {
+         ui->graphicsView->fitInView(pxmapItem,Qt::KeepAspectRatio);
+         ui->graphicsView->ensureVisible(pxmapItem);
+         ui->graphicsView->show();
+     }
 }

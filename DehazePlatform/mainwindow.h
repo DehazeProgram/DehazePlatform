@@ -29,6 +29,8 @@ private:
     QGraphicsPixmapItem *pxmapItem;
     ImageManager *imgManager;
 
+    void resizeEvent(QResizeEvent *event);
+
 
 
 };
