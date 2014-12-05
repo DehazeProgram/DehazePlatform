@@ -17,8 +17,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addAction(ui->actionOpen);
     ui->treeView->header()->hide();
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    //setting dockWidget
     ui->dockWidget->setWindowTitle(QString("Image"));
     ui->darkChannelDock->setWindowTitle(QString("DarkChannelDehazor"));
+    ui->colorCorrectDock->setWindowTitle(QString("ColorCorrect"));
+//    this->tabifyDockWidget(ui->colorCorrectDock,ui->darkChannelDock);
+//    ui->darkChannelDock->raise();
 }
 
 MainWindow::~MainWindow()

@@ -114,7 +114,7 @@ void ColorCorrect::ContractEnhancement(cv::Mat &image, float s1, float s2,float 
 
     GenerateHistogram(histo,image);
 
-    int max =254,min =0;
+    int max =255,min =0;
 
     while (histo[min] < count*s1) {
         ++min;

@@ -32,3 +32,19 @@ else:unix: LIBS += -LC:/OSGeo4W64/lib/ -lopencv_core -lopencv_highgui
 
 INCLUDEPATH += C:/OSGeo4W64/include
 DEPENDPATH += C:/OSGeo4W64/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/ColorFactory/ -lColorFactory
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/ColorFactory/ -lColorFactory
+else:unix: LIBS += -L$$OUT_PWD/../lib/ColorFactory/ -lColorFactory
+
+INCLUDEPATH += $$PWD/../ColorFactory
+DEPENDPATH += $$PWD/../ColorFactory
+
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/Dehazor/ -lDarkChannelDehazor
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/Dehazor/ -lDarkChannelDehazor
+else:unix: LIBS += -L$$OUT_PWD/../Dehazor/ -lDarkChannelDehazor
+
+INCLUDEPATH += $$PWD/../DehazeCode
+DEPENDPATH += $$PWD/../DehazeCode

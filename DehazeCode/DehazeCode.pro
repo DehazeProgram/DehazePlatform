@@ -2,10 +2,10 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE =lib
-TARGET = darkchanneldehazor
+TARGET = DarkChannelDehazor
 DESTDIR = ../lib/Dehazor
-
-DEFINES += DEHAZECODE
+DLLDESTDIR  = ../lib/Dehazor
+DEFINES += DEHAZECODE_LIBRARY
 
 HEADERS += \
     darkchanneldehazor.h\
