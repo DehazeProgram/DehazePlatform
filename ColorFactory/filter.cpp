@@ -31,6 +31,7 @@ void Filter::DarkImageFilter(cv::Mat& src, int windowsize, cv::Mat& dst)
             img.at<uchar>(i,j) = ((temp<p2)?temp:p2);
         }
     }
+    cv::imwrite("C:\\hr\\experiment\\dehazeimage\\minrgb.jpg",img);
     std::cout <<"MINFILTER START"<<std::endl;
     time_t startDark = clock();
 
@@ -42,6 +43,7 @@ void Filter::DarkImageFilter(cv::Mat& src, int windowsize, cv::Mat& dst)
 void Filter::MinFilter_2D(cv::Mat &src, cv::Mat &dst, int windowsize)
 {
     CV_Assert(src.rows == dst.rows && src.cols ==dst.cols && src.channels() ==1);
+//    std::cout <<src.type()<<std::endl;
     if(src.type() != CV_8UC1)
         src.convertTo(src,CV_8UC1);
     int r = windowsize/2;
@@ -335,7 +337,7 @@ void Filter::GuideFilter_Single( cv::Mat& guidedImage, cv::Mat& source,cv::Mat& 
 
 
 
-void Filter::GuideFilter_Multi(std::vector< cv::Mat > &guidedImages, cv::Mat &source,
+void Filter::GuideFilter_Multi(QVector< cv::Mat > &guidedImages, cv::Mat &source,
                                cv::Mat &output, int radius, float epsilon)
 {
     CV_Assert(radius >= 2 && epsilon > 0);
@@ -344,13 +346,9 @@ void Filter::GuideFilter_Multi(std::vector< cv::Mat > &guidedImages, cv::Mat &so
     CV_Assert((source.rows == guidedImages[0].rows)&&(source.cols == guidedImages[0].cols));
     CV_Assert((source.rows == guidedImages[1].rows)&&(source.cols == guidedImages[1].cols));
     CV_Assert((source.rows == guidedImages[2].rows)&&(source.cols == guidedImages[2].cols));
-    //    std::cout <<"source.rows: "<<source.rows<<std::endl;
-    //    std::cout <<"source.cols: "<<source.cols<<std::endl;
 
     int col =source.cols;
     int row =source.rows;
-
-
 
     //convertTo 32f
     cv::Mat guidedImage_b_32f,guidedImage_g_32f,guidedImage_r_32f,source_32f;

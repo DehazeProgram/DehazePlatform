@@ -17,13 +17,13 @@ void ColorCorrect::AutoColor(cv::Mat &image, float s1, float s2)
     }
 
     if(image.type() == CV_8UC1)
-        _AutoColorSingle(image,s1,s2);
+        AutoColor_single(image,s1,s2);
     if(image.type() == CV_8UC3)
     {
         std::vector<cv::Mat> images;
         cv::split(image,images);
         for(int i=0;i <images.size();++i)
-            _AutoColorSingle(images[i],s1,s2);
+            AutoColor_single(images[i],s1,s2);
         cv::merge(images,image);
     }
 
@@ -147,9 +147,10 @@ void ColorCorrect::ContractEnhancement(cv::Mat &image, float s1, float s2,float 
     }
 }
 
-void ColorCorrect::GenerateHistogram(QVector<int> &histo, const cv::Mat &image)
+void ColorCorrect::GenerateHistogram(QVector<int> &histo,const cv::Mat &image)
 {
     CV_Assert(image.type() == CV_8UC1);
+    histo.resize(256);
     histo.fill(0,256);
     for(int i =0;i <image.rows;++i)
     {
@@ -163,7 +164,7 @@ void ColorCorrect::GenerateHistogram(QVector<int> &histo, const cv::Mat &image)
         histo[i] =histo[i] +histo[i-1];
 }
 
-void ColorCorrect::_AutoColorSingle(cv::Mat &image, float s1, float s2)
+void ColorCorrect::AutoColor_single(cv::Mat &image, float s1, float s2)
 {
     if ((image.depth() != CV_8UC1 ) > FLT_EPSILON)
         image.convertTo(image, CV_8UC1);
@@ -200,4 +201,5 @@ void ColorCorrect::_AutoColorSingle(cv::Mat &image, float s1, float s2)
             image.at<uchar>(i,j) = ((image.at<uchar>(i,j) - min)*255)/(max -min);
         }
     }
+
 }

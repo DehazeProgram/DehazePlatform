@@ -2,12 +2,16 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE =lib
-TARGET = colorcorrect
+TARGET = ColorFactory
 DESTDIR = ../lib/ColorFactory
+DLLDESTDIR  = ../lib/ColorFactory
+
+DEFINES += COLORFACTORY_LIBRARY
 
 HEADERS += \
     colorcorrect.h\
-    filter.h
+    filter.h\
+    colorfactory_global.h
 
 SOURCES += \
     colorcorrect.cpp\

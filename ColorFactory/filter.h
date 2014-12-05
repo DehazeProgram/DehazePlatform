@@ -2,28 +2,21 @@
 #define FILTER_H
 
 #include <opencv2/opencv.hpp>
-#include <vector>
-#include <deque>
+#include <QVector>
 #include <QPoint>
+#include <deque>
 #include"time.h"
+#include "colorfactory_global.h"
 
-//struct QPoint
-//{
-//    QPoint(int a,int b):x(a),y(b){}
-//    int x;
-//    int y;
-//};
 
-class Filter
+
+class FILTER_SHARED_EXPORT Filter
 {
 public:
     Filter();
     static void DarkImageFilter(cv::Mat &src, int windowsize, cv::Mat &dst);
-//    void guideFilter(cv::Mat &guideI, cv::Mat &inputI, cv::Mat &dst, int radius, float eps);
     static void GuideFilter_Single(cv::Mat& guidedImage, cv::Mat& source,cv::Mat& output,int radius, float epsilon);
-    static void GuideFilter_Multi(std::vector< cv::Mat >& guidedImages, cv::Mat& sourse, cv::Mat& output, int radius, float epsilon);
-    template<typename T>
-    static void MaxFilter_1D(std::vector<T> &vec, std::vector<T> &dst, int windowsize, std::deque<int> &maxs=std::deque<int>());
+    static void GuideFilter_Multi(QVector<cv::Mat> &guidedImages, cv::Mat& sourse, cv::Mat& output, int radius, float epsilon);
     static void MaxFilter_2D(cv::Mat &src,cv::Mat &dst,int windowsize);
     static void MinFilter_2D(cv::Mat &src,cv::Mat &dst,int windowsize);
 private:
@@ -42,7 +35,8 @@ private:
     }
     template<typename T>
     static void MinFilter_1D(std::vector<T> &vec, std::vector<T>&dst,int windowsize,std::deque<int> &mins=std::deque<int>());
-//    static void MinFilter_2D(cv::Mat &src,cv::Mat &dst,int windowsize);
+    template<typename T>
+    static void MaxFilter_1D(std::vector<T> &vec, std::vector<T> &dst, int windowsize, std::deque<int> &maxs=std::deque<int>());
     static void MakeDepth32f(cv::Mat& source, cv::Mat& output);
 
 };

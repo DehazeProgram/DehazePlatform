@@ -4,8 +4,10 @@
 #include<iostream>
 #include<QVector>
 #include<opencv2/opencv.hpp>
+#include "colorfactory_global.h"
 
-class ColorCorrect
+
+class COLORCORRECT_SHARED_EXPORT ColorCorrect
 {
 public:
     ColorCorrect();
@@ -14,7 +16,7 @@ public:
     static void ContractEnhancement(cv::Mat &image, float s1, float s2, float eps);
     static void GenerateHistogram(QVector<int> &histo, const cv::Mat &image);
 private:
-    static void _AutoColorSingle(cv::Mat &image, float s1, float s2);
+    static void AutoColor_single(cv::Mat &image, float s1, float s2);
 
 };
 
