@@ -5,7 +5,8 @@
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
-#include <imagemanager.h>
+#include "imagemanager.h"
+#include "darkchanneldehazor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,12 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addAction(ui->actionOpen);
     ui->treeView->header()->hide();
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    //setting dockWidget
-    ui->dockWidget->setWindowTitle(QString("Image"));
-    ui->darkChannelDock->setWindowTitle(QString("DarkChannelDehazor"));
-    ui->colorCorrectDock->setWindowTitle(QString("ColorCorrect"));
-//    this->tabifyDockWidget(ui->colorCorrectDock,ui->darkChannelDock);
-//    ui->darkChannelDock->raise();
+
+    SetDockWidgets();
+    SetSpinBoxes();
 }
 
 MainWindow::~MainWindow()
@@ -73,4 +71,44 @@ void MainWindow::resizeEvent(QResizeEvent *event)
          ui->graphicsView->ensureVisible(pxmapItem);
          ui->graphicsView->show();
      }
+}
+
+void MainWindow::SetSpinBoxes()
+{
+    ui->DCEpsSpinBox->setMaximum(1.00);
+    ui->DCEpsSpinBox->setMinimum(0.00);
+    ui->DCEpsSpinBox->setSingleStep(0.01);
+    ui->DCEpsSpinBox->setValue(1.00);
+    ui->DCEpsSpinBox->setWrapping(true);
+
+    ui->DCMaxASpinBox->setMaximum(255);
+    ui->DCMaxASpinBox->setMinimum(0);
+    ui->DCMaxASpinBox->setSingleStep(10);
+    ui->DCMaxASpinBox->setValue(220);
+    ui->DCMaxASpinBox->setWrapping(true);
+
+    ui->DCTransmissionSpinBox->setMaximum(1.00);
+    ui->DCTransmissionSpinBox->setMinimum(0);
+    ui->DCTransmissionSpinBox->setSingleStep(0.01);
+    ui->DCTransmissionSpinBox->setValue(0.01);
+    ui->DCTransmissionSpinBox->setWrapping(true);
+}
+
+void MainWindow::SetDockWidgets()
+{
+    //setting dockWidget
+    ui->dockWidget->setWindowTitle(QString("Image"));
+    ui->darkChannelDock->setWindowTitle(QString("DarkChannelDehazor"));
+    ui->colorCorrectDock->setWindowTitle(QString("ColorCorrect"));
+//    this->tabifyDockWidget(ui->colorCorrectDock,ui->darkChannelDock);
+//    ui->darkChannelDock->raise();
+}
+
+void MainWindow::on_DCDehazeButton_clicked()
+{
+    DarkChannelDehazor dehazor(imgManager->getImagePath(),
+                               ui->DCEpsSpinBox->value(),
+                               ui->DCTransmissionSpinBox->value(),
+                               ui->DCMaxASpinBox->value());
+    dehazor.Process();
 }

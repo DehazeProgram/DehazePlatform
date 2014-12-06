@@ -18,6 +18,8 @@ public:
     ~ImageManager();
     inline ImageTreeModel* getModel() {return model;}
     inline void setModel(ImageTreeModel* m) {model =m;}
+    inline QString getImagePath(){ return imagePath;}
+
     void onContextMenu(QModelIndex &index);
 
 public slots:

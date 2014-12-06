@@ -5,19 +5,24 @@
 #include <fstream>
 #include <iostream>
 #include <QVector>
+#include <QString>
+#include <QDebug>
 #include <opencv2/opencv.hpp>
 
 
-DarkChannelDehazor::DarkChannelDehazor(std::string &imagePath,  float eps, float t, int max_a)
+DarkChannelDehazor::DarkChannelDehazor(QString &imagePath,  float eps, float t, int max_a)
     :_eps(eps),_max_A(max_a),_t0(t)
 {
-    rawImage =cv::imread(imagePath,CV_LOAD_IMAGE_COLOR);
+    std::string path = imagePath.toStdString();
+    rawImage =cv::imread(path,CV_LOAD_IMAGE_COLOR);
     Init();
 }
 
 
-DarkChannelDehazor::DarkChannelDehazor(cv::Mat &img):rawImage(img)
+DarkChannelDehazor::DarkChannelDehazor(const cv::Mat &img,float eps, float t, int max_a)
+    :rawImage(img),_eps(eps),_max_A(max_a),_t0(t)
 {
+    CV_Assert(rawImage.channels() == 3);
     Init();
 }
 
@@ -159,4 +164,6 @@ void DarkChannelDehazor::GenerateDehazeImage()
     dehazes.push_back(dehaze_r);
 
     cv::merge(dehazes,dehazeImage);
+    cv::imwrite("C:\\hr\\experiment\\dehazeimage\\IMG_30154_dehaze6.jpg",dehazeImage);
+    qDebug()<<"finish";
 }

@@ -96,7 +96,7 @@
    <property name="minimumSize">
     <size>
      <width>481</width>
-     <height>150</height>
+     <height>177</height>
     </size>
    </property>
    <attribute name="dockWidgetArea">
@@ -120,7 +120,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="epsSpinBox"/>
+           <widget class="QDoubleSpinBox" name="DCEpsSpinBox"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="transmissionLabel">
@@ -130,7 +130,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="transmissionSpinBox_2"/>
+           <widget class="QDoubleSpinBox" name="DCTransmissionSpinBox"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="maxALabel">
@@ -140,7 +140,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QSpinBox" name="spinBox"/>
+           <widget class="QSpinBox" name="DCMaxASpinBox"/>
           </item>
          </layout>
         </widget>

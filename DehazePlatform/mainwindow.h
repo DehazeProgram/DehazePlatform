@@ -24,12 +24,16 @@ private slots:
     void OpenImage(QString &imagePath);
     void on_treeView_customContextMenuRequested(const QPoint &pos);
 
+    void on_DCDehazeButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem *pxmapItem;
     ImageManager *imgManager;
 
     void resizeEvent(QResizeEvent *event);
+    void SetSpinBoxes();
+    void SetDockWidgets();
 
 
 
