@@ -26,15 +26,18 @@ public slots:
     void OpenImage();
     void ShowChannelImage(QModelIndex index);
     void RemoveImage();
+    void LoadDehazeImage(MainWindow::DehazeType type);
 signals:
     void OpenImage(QString&);
     void ColorImage(QString&);
     void GrayImage(QString&);
+    void LoadDehazeImageItem(MainWindow::DehazeType,QString&);
 
 
 private:
     QString imagePath;
     cv::Mat image;
+    cv::Mat dehazeImage;
     MainWindow *window;
     ImageTreeModel *model;
     QGraphicsScene *scene;

@@ -42,7 +42,7 @@ void MainWindow::on_actionOpen_triggered()
     ui->treeView->expandAll();
 
     connect(ui->treeView,SIGNAL(doubleClicked(QModelIndex)),imgManager,SLOT(ShowChannelImage(QModelIndex)));
-
+    connect(this,SIGNAL(DehazeFinish(MainWindow::DehazeType)),imgManager,SLOT(LoadDehazeImage(MainWindow::DehazeType)));
 }
 
 void MainWindow::OpenImage(QString &imagePath)
@@ -106,9 +106,12 @@ void MainWindow::SetDockWidgets()
 
 void MainWindow::on_DCDehazeButton_clicked()
 {
+    if(imgManager == NULL)
+        return;
     DarkChannelDehazor dehazor(imgManager->getImagePath(),
                                ui->DCEpsSpinBox->value(),
                                ui->DCTransmissionSpinBox->value(),
                                ui->DCMaxASpinBox->value());
-    dehazor.Process();
+    dehazor.Process(imgManager->dehazeImage);
+    emit DehazeFinish(DARK_CHANNEL_DEHAZE);
 }

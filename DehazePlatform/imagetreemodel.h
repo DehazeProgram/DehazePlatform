@@ -2,9 +2,10 @@
 #define IMAGETREEMODEL_H
 
 #include <QStandardItemModel>
-#include <imagemanager.h>
+#include "imagemanager.h"
+#include "imagetreeitem.h"
+#include <QVector>
 
-class ImageTreeItem;
 
 class ImageTreeModel : public QStandardItemModel
 {
@@ -15,9 +16,12 @@ public:
     ~ImageTreeModel();
 
 public slots:
-    void initImageTreeModel(QString &text);
+    void InitImageTreeModel(QString &text);
+    void LoadDehazeImage(MainWindow::DehazeType type, QString &text);
 private:
     ImageTreeItem* rootItem;
+    ImageTreeItem* DCDehazeImageItem;
+
 };
 
 #endif // IMAGETREEMODEL_H

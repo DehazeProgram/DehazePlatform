@@ -18,8 +18,9 @@ ImageManager::ImageManager(QString &imgPath, MainWindow *w):
 {
     image = cv::imread(imagePath.toStdString());
     QObject::connect(this,SIGNAL(OpenImage(QString&)),window,SLOT(OpenImage(QString&)));
-    QObject::connect(this,SIGNAL(ColorImage(QString&)),model,SLOT(initImageTreeModel(QString&)));
+    QObject::connect(this,SIGNAL(ColorImage(QString&)),model,SLOT(InitImageTreeModel(QString&)));
     QObject::connect(remove,SIGNAL(triggered()),this,SLOT(RemoveImage()));
+    QObject::connect(this,SIGNAL(LoadDehazeImageItem(MainWindow::DehazeType,QString&)),model,SLOT(LoadDehazeImage(MainWindow::DehazeType,QString&)));
 }
 
 ImageManager::~ImageManager()
@@ -97,6 +98,11 @@ void ImageManager::RemoveImage()
     model->clear();
     scene->clear();
     image.release();
+}
+
+void ImageManager::LoadDehazeImage(MainWindow::DehazeType type)
+{
+    emit LoadDehazeImageItem(type,window->ui->DCNamelineEdit->text());
 }
 
 void ImageManager::ShowImage(QPixmap &pixmap)

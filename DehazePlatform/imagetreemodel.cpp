@@ -4,7 +4,8 @@
 
 ImageTreeModel::ImageTreeModel(QObject *parent):
     QStandardItemModel(parent),
-    rootItem(NULL)
+    rootItem(NULL),
+    DCDehazeImageItem(NULL)
 {
 
 }
@@ -16,7 +17,7 @@ ImageTreeModel::~ImageTreeModel()
 }
 
 
-void ImageTreeModel::initImageTreeModel(QString &text)
+void ImageTreeModel::InitImageTreeModel(QString &text)
 {
     if(!rootItem)
         rootItem =NULL;
@@ -49,3 +50,23 @@ void ImageTreeModel::initImageTreeModel(QString &text)
 
     this->appendRow(rootItem);
 }
+
+void ImageTreeModel::LoadDehazeImage(MainWindow::DehazeType type,QString& text)
+{
+    switch (type) {
+    case MainWindow::DARK_CHANNEL_DEHAZE:
+        if(!DCDehazeImageItem)
+        {
+            DCDehazeImageItem = new ImageTreeItem
+                    (ImageTreeItem::DEHAZE_IMAGE_ROOT,rootItem,QString("Dark Channel Dehaze Image"));
+            rootItem->appendRow(DCDehazeImageItem);
+        }
+        ImageTreeItem* imageItem = new ImageTreeItem(ImageTreeItem::DEHAZE_IMAGE,DCDehazeImageItem,text);
+        DCDehazeImageItem->appendRow(imageItem);
+        imageItem->setEditable(false);
+        break;
+    }
+
+}
+
+

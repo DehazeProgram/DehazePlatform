@@ -1,7 +1,7 @@
 #include "imagetreeitem.h"
 
-ImageTreeItem::ImageTreeItem(ItemType itype, ImageTreeItem *p, QString &text):
-    parentItem(p)
+ImageTreeItem::ImageTreeItem(ItemType itype, ImageTreeItem *parent, QString &text):
+    parentItem(parent)
 {
     _itemType = itype;
     initText(text);
@@ -13,6 +13,12 @@ void ImageTreeItem::initText(QString &text)
 {
     switch (_itemType) {
     case IMAGE_ROOT:
+        this->setText(text);
+        break;
+    case DEHAZE_IMAGE_ROOT:
+        this->setText(text);
+        break;
+    case DEHAZE_IMAGE:
         this->setText(text);
         break;
     case RED:
@@ -37,9 +43,17 @@ void ImageTreeItem::initFont()
         font.setBold(true);
         font.setPointSize(font.pointSize()+2);
         break;
-    case RED:
+    case DEHAZE_IMAGE_ROOT:
         font.setBold(true);
         font.setPointSize(font.pointSize()+1);
+        break;
+    case DEHAZE_IMAGE:
+        font.setBold(true);
+        font.setPointSize(font.pointSize());
+        break;
+    case RED:
+        font.setBold(true);
+        font.setPointSize(font.pointSize());
         break;
     case GREEN:
         font.setBold(true);
@@ -61,6 +75,11 @@ void ImageTreeItem::initColor()
     switch (_itemType) {
     case IMAGE_ROOT:
         brush.setColor(QColor(Qt::red));
+        break;
+    case DEHAZE_IMAGE_ROOT:
+        brush.setColor(QColor(Qt::red));
+        break;
+    case DEHAZE_IMAGE:
         break;
     case RED:
         break;

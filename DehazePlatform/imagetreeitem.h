@@ -10,9 +10,11 @@ public:
         IMAGE_ROOT,
         RED,
         GREEN,
-        BLUE
+        BLUE,
+        DEHAZE_IMAGE_ROOT,
+        DEHAZE_IMAGE
     };
-    ImageTreeItem(ItemType itype,ImageTreeItem*p=0,QString &text = QString(""));
+    ImageTreeItem(ItemType itype,ImageTreeItem* parent=0,QString &text = QString(""));
     const ImageTreeItem* parent() const {return parentItem;}
     const ItemType getType() const{return _itemType;}
 

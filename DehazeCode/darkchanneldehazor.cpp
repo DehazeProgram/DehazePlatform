@@ -33,7 +33,6 @@ void DarkChannelDehazor::Init()
 
 
     darkChannelImage = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1,cv::Scalar(0));
-    dehazeImage      = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1,cv::Scalar(0));
     transmission   = cv::Mat(rawImage.rows,rawImage.cols,CV_32FC1, cv::Scalar(0));
 
     cv::split(rawImage,channelLayers);
@@ -41,12 +40,14 @@ void DarkChannelDehazor::Init()
 
 }
 
-void DarkChannelDehazor::Process()
+void DarkChannelDehazor::Process(cv::Mat &dehazeImage)
 {
+    dehazeImage = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1);
+    qDebug()<<dehazeImage.empty();
     GenerateDarkImage();
     GenerateAtmosphericRadiation();
     GenereteTransmmision();
-    GenerateDehazeImage();
+    GenerateDehazeImage(dehazeImage);
 }
 
 void DarkChannelDehazor::GenerateDarkImage()
@@ -124,7 +125,7 @@ void DarkChannelDehazor::GenereteTransmmision()
 
 }
 
-void DarkChannelDehazor::GenerateDehazeImage()
+void DarkChannelDehazor::GenerateDehazeImage(cv::Mat &dehazeImage)
 {
     int row = rawImage.rows;
     int col = rawImage.cols;

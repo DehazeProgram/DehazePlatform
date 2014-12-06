@@ -25,13 +25,12 @@ public:
     inline void setGuideFliterWindowSize(int s){ _guideFliterWindowSize =s;}
     inline void setMaxAtmosphericRadiation(int a) {  _max_A =a;}
 
-    void Process();
+    void Process(cv::Mat &dehazeImage);
 
 private:
     cv::Mat rawImage;
     cv::Mat darkChannelImage;
     cv::Mat transmission;
-    cv::Mat dehazeImage;
     std::vector<cv::Mat > channelLayers;
 
     int _minFliterWindowSize;
@@ -48,7 +47,7 @@ private:
     void GenerateDarkImage();
     void GenerateAtmosphericRadiation();
     void GenereteTransmmision();
-    void GenerateDehazeImage();
+    void GenerateDehazeImage(cv::Mat &dehazeImage);
 };
 
 #endif // DARKIMAGEDEHAZOR_H
