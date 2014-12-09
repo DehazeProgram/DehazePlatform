@@ -19,3 +19,7 @@
 *.exe
 *.out
 *.app
+
+#user
+*.user
+*.autosave

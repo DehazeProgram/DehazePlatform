@@ -3,6 +3,8 @@
 #include "imagetreeitem.h"
 #include <QDebug>
 #include <opencv2/opencv.hpp>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 #include <QMenu>
 #include <QAction>
 #include <QVector>
@@ -17,7 +19,6 @@ ImageManager::ImageManager(QString &imgPath, MainWindow *w):
     remove(new QAction(QString("Remove"),NULL))
 {
     image = cv::imread(imagePath.toStdString());
-    QObject::connect(this,SIGNAL(OpenImage(QString&)),window,SLOT(OpenImage(QString&)));
     QObject::connect(this,SIGNAL(ColorImage(QString&)),model,SLOT(InitImageTreeModel(QString&)));
     QObject::connect(remove,SIGNAL(triggered()),this,SLOT(RemoveImage()));
     QObject::connect(this,SIGNAL(LoadDehazeImageItem(MainWindow::DehazeType,QString&)),model,SLOT(LoadDehazeImage(MainWindow::DehazeType,QString&)));
@@ -46,8 +47,7 @@ void ImageManager::onContextMenu(QModelIndex &index)
 
 void ImageManager::OpenImage()
 {
-    emit OpenImage(QString(imagePath));
-
+    ShowImage();
     std::string imageName(imagePath.toStdString(),imagePath.toStdString().rfind("/")+1,
                           imagePath.size() -imagePath.toStdString().rfind("/"));
     if(image.channels() == 3)
@@ -113,6 +113,18 @@ void ImageManager::ShowImage(QPixmap &pixmap)
     window->ui->graphicsView->setScene(scene);
     window->ui->graphicsView->fitInView((QGraphicsItem *)window->pxmapItem,Qt::KeepAspectRatio);
     window->ui->graphicsView->ensureVisible((QGraphicsItem *)window->pxmapItem);
+}
+
+void ImageManager::ShowImage()
+{
+    QPixmap p =  QPixmap(imagePath);
+    p.load(imagePath);
+    if(p.isNull())
+        qDebug()<<"p is null";
+    window->pxmapItem = window->imgManager->scene->addPixmap(p);
+    window->ui->graphicsView->fitInView(window->pxmapItem,Qt::KeepAspectRatio);
+    window->ui->graphicsView->ensureVisible(window->pxmapItem);
+    window->ui->graphicsView->show();
 }
 
 void ImageManager::ConvertCvMatToGrayPixmaps(cv::Mat &mat,QVector<QPixmap> &pixmaps)

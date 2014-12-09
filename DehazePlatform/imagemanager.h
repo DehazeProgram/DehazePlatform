@@ -3,7 +3,7 @@
 #include <QString>
 #include <QObject>
 #include <opencv2/opencv.hpp>
-#include <mainwindow.h>
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 //#include "imagetreemodel.h"
 
@@ -44,6 +44,7 @@ private:
     QAction* remove;
 
     void ShowImage(QPixmap &pixmap);
+    void ShowImage();
     void ConvertCvMatToGrayPixmaps(cv::Mat &mat, QVector<QPixmap> &pixmaps);
     QImage const copy_mat_to_qimage(cv::Mat const &mat);
 };

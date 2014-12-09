@@ -28,7 +28,6 @@ signals:
 
 private slots:
     void on_actionOpen_triggered();
-    void OpenImage(QString &imagePath);
     void on_treeView_customContextMenuRequested(const QPoint &pos);
     void on_DCDehazeButton_clicked();
 

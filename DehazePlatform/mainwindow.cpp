@@ -30,11 +30,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    QString imagePath = QFileDialog::getOpenFileName(this,"Selected a haze image");
+    if(imagePath.isEmpty())
+        return;
     if(imgManager)
     {
         delete imgManager;
     }
-    QString imagePath = QFileDialog::getOpenFileName(this,"Selected a haze image");
     imgManager = new ImageManager(imagePath,this);
     ui->graphicsView->setScene(imgManager->scene);
     ui->treeView->setModel((QAbstractItemModel*)(imgManager->getModel()) );
@@ -45,15 +47,7 @@ void MainWindow::on_actionOpen_triggered()
     connect(this,SIGNAL(DehazeFinish(MainWindow::DehazeType)),imgManager,SLOT(LoadDehazeImage(MainWindow::DehazeType)));
 }
 
-void MainWindow::OpenImage(QString &imagePath)
-{
-    QPixmap p =  QPixmap(imagePath);
-    pxmapItem = imgManager->scene->addPixmap(p);
 
-    ui->graphicsView->fitInView(pxmapItem,Qt::KeepAspectRatio);
-    ui->graphicsView->ensureVisible(pxmapItem);
-    ui->graphicsView->show();
-}
 
 
 void MainWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
