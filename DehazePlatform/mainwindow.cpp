@@ -49,6 +49,7 @@ void MainWindow::OpenImage(QString &imagePath)
 {
     QPixmap p =  QPixmap(imagePath);
     pxmapItem = imgManager->scene->addPixmap(p);
+
     ui->graphicsView->fitInView(pxmapItem,Qt::KeepAspectRatio);
     ui->graphicsView->ensureVisible(pxmapItem);
     ui->graphicsView->show();
