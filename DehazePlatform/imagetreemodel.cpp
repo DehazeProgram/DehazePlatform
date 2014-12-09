@@ -62,6 +62,10 @@ void ImageTreeModel::LoadDehazeImage(MainWindow::DehazeType type,QString& text)
             rootItem->appendRow(DCDehazeImageItem);
         }
         ImageTreeItem* imageItem = new ImageTreeItem(ImageTreeItem::DEHAZE_IMAGE,DCDehazeImageItem,text);
+        ImageTreeItem* darkChannelItem = new ImageTreeItem(ImageTreeItem::DEHAZE_IMAGE_DCIMAGE,imageItem,QString("DarkChannelImage"));
+        ImageTreeItem* refineImage = new ImageTreeItem(ImageTreeItem::DEHAZE_IMAGE_TRANSMISSION_IMAGE,imageItem,QString("TransmissionImage"));
+        imageItem->appendRow(darkChannelItem);
+        imageItem->appendRow(refineImage);
         DCDehazeImageItem->appendRow(imageItem);
         imageItem->setEditable(false);
         break;

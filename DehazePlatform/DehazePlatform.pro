@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     imagemanager.cpp \
     imagetreeitem.cpp \
-    imagetreemodel.cpp
+    imagetreemodel.cpp \
+    dcdehaze.cpp \
+    dehaze.cpp
 
 HEADERS  += mainwindow.h \
     imagemanager.h \
     imagetreeitem.h \
-    imagetreemodel.h
+    imagetreemodel.h \
+    dcdehaze.h \
+    dehaze.h
 
 FORMS    += mainwindow.ui
 

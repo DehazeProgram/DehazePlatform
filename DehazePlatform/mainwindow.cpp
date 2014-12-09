@@ -7,6 +7,8 @@
 #include <QGraphicsPixmapItem>
 #include "imagemanager.h"
 #include "darkchanneldehazor.h"
+#include "dehaze.h"
+#include "dcdehaze.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,8 +48,6 @@ void MainWindow::on_actionOpen_triggered()
     connect(ui->treeView,SIGNAL(doubleClicked(QModelIndex)),imgManager,SLOT(ShowChannelImage(QModelIndex)));
     connect(this,SIGNAL(DehazeFinish(MainWindow::DehazeType)),imgManager,SLOT(LoadDehazeImage(MainWindow::DehazeType)));
 }
-
-
 
 
 void MainWindow::on_treeView_customContextMenuRequested(const QPoint &pos)
@@ -103,10 +103,14 @@ void MainWindow::on_DCDehazeButton_clicked()
 {
     if(imgManager == NULL)
         return;
+    imgManager->dehazeImages = new DCDehaze();
     DarkChannelDehazor dehazor(imgManager->getImagePath(),
                                ui->DCEpsSpinBox->value(),
                                ui->DCTransmissionSpinBox->value(),
                                ui->DCMaxASpinBox->value());
-    dehazor.Process(imgManager->dehazeImage);
+    dehazor.Process(imgManager->dehazeImages->GetDahezeImage(),
+                    ((DCDehaze*)(imgManager->dehazeImages))->GetDarkChannelImage(),
+                    ((DCDehaze*)(imgManager->dehazeImages))->GetTransmissionImage());
     emit DehazeFinish(DARK_CHANNEL_DEHAZE);
+    ui->treeView->expandAll();
 }

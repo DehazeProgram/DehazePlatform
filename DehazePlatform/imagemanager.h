@@ -3,6 +3,7 @@
 #include <QString>
 #include <QObject>
 #include <opencv2/opencv.hpp>
+#include "dehaze.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 //#include "imagetreemodel.h"
@@ -37,11 +38,11 @@ signals:
 private:
     QString imagePath;
     cv::Mat image;
-    cv::Mat dehazeImage;
     MainWindow *window;
     ImageTreeModel *model;
     QGraphicsScene *scene;
     QAction* remove;
+    Dehaze* dehazeImages;
 
     void ShowImage(QPixmap &pixmap);
     void ShowImage();

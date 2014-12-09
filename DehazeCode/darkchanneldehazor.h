@@ -25,7 +25,7 @@ public:
     inline void setGuideFliterWindowSize(int s){ _guideFliterWindowSize =s;}
     inline void setMaxAtmosphericRadiation(int a) {  _max_A =a;}
 
-    void Process(cv::Mat &dehazeImage);
+    void Process(cv::Mat &dehazeImage, cv::Mat &DCImage, cv::Mat &transmissionImage);
 
 private:
     cv::Mat rawImage;
@@ -44,9 +44,9 @@ private:
 
     void Init();
 
-    void GenerateDarkImage();
+    cv::Mat &GenerateDarkImage();
     void GenerateAtmosphericRadiation();
-    void GenereteTransmmision();
+    cv::Mat &GenereteTransmmision();
     void GenerateDehazeImage(cv::Mat &dehazeImage);
 };
 

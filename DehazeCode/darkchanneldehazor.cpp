@@ -40,19 +40,19 @@ void DarkChannelDehazor::Init()
 
 }
 
-void DarkChannelDehazor::Process(cv::Mat &dehazeImage)
+void DarkChannelDehazor::Process(cv::Mat &dehazeImage,cv::Mat &DCImage,cv::Mat &transmissionImage)
 {
     dehazeImage = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1);
-    qDebug()<<dehazeImage.empty();
-    GenerateDarkImage();
+    DCImage = GenerateDarkImage();
     GenerateAtmosphericRadiation();
-    GenereteTransmmision();
+    transmissionImage = GenereteTransmmision().clone();
     GenerateDehazeImage(dehazeImage);
 }
 
-void DarkChannelDehazor::GenerateDarkImage()
+cv::Mat& DarkChannelDehazor::GenerateDarkImage()
 {
     Filter::DarkImageFilter(rawImage,_minFliterWindowSize,darkChannelImage);
+    return darkChannelImage;
 }
 
 
@@ -93,7 +93,7 @@ void DarkChannelDehazor::GenerateAtmosphericRadiation()
 
 }
 
-void DarkChannelDehazor::GenereteTransmmision()
+cv::Mat& DarkChannelDehazor::GenereteTransmmision()
 {
     cv::Mat_<float> trans_t= cv::Mat(rawImage.rows,rawImage.cols,CV_32F, cv::Scalar(0));
 
@@ -122,6 +122,7 @@ void DarkChannelDehazor::GenereteTransmmision()
         }
     }
     Filter::GuideFilter_Single(channelLayers[0],trans_t,transmission,_minFliterWindowSize*4,_eps);
+    return transmission;
 
 }
 
@@ -166,5 +167,5 @@ void DarkChannelDehazor::GenerateDehazeImage(cv::Mat &dehazeImage)
 
     cv::merge(dehazes,dehazeImage);
     cv::imwrite("C:\\hr\\experiment\\dehazeimage\\IMG_30154_dehaze6.jpg",dehazeImage);
-    qDebug()<<"finish";
+
 }

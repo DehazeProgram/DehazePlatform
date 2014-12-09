@@ -16,7 +16,8 @@ ImageManager::ImageManager(QString &imgPath, MainWindow *w):
     window(w),
     scene(new QGraphicsScene(this)),
     model(new ImageTreeModel(NULL)),
-    remove(new QAction(QString("Remove"),NULL))
+    remove(new QAction(QString("Remove"),NULL)),
+    dehazeImages(NULL)
 {
     image = cv::imread(imagePath.toStdString());
     QObject::connect(this,SIGNAL(ColorImage(QString&)),model,SLOT(InitImageTreeModel(QString&)));
@@ -26,6 +27,7 @@ ImageManager::ImageManager(QString &imgPath, MainWindow *w):
 
 ImageManager::~ImageManager()
 {
+    delete dehazeImages;
     model->clear();
     scene->clear();
     image.release();
@@ -74,23 +76,25 @@ void ImageManager::ShowChannelImage(QModelIndex index)
 
     ConvertCvMatToGrayPixmaps(image,channelPixmaps);
     ImageTreeItem* item = (ImageTreeItem*)(model->itemFromIndex(index));
-    if(item->getType() == ImageTreeItem::IMAGE_ROOT)
+    switch (item->getType()) {
+    case ImageTreeItem::IMAGE_ROOT:
     {
         QPixmap pixmap =QPixmap(imagePath);
         ShowImage(pixmap);
+        break;
     }
-    else if(item->getType() == ImageTreeItem::RED)
-    {
+    case ImageTreeItem::RED:
         ShowImage(channelPixmaps[0]);
-    }
-    else if (item->getType() == ImageTreeItem::BLUE)
-    {
+        break;
+    case ImageTreeItem::BLUE:
         ShowImage(channelPixmaps[1]);
-    }
-    else if (item->getType() == ImageTreeItem::GREEN)
-    {
+        break;
+    case ImageTreeItem::GREEN:
         ShowImage(channelPixmaps[2]);
+        break;
+
     }
+
 }
 
 void ImageManager::RemoveImage()

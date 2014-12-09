@@ -21,6 +21,12 @@ void ImageTreeItem::initText(QString &text)
     case DEHAZE_IMAGE:
         this->setText(text);
         break;
+    case DEHAZE_IMAGE_DCIMAGE:
+        this->setText(text);
+        break;
+    case DEHAZE_IMAGE_TRANSMISSION_IMAGE:
+        this->setText(text);
+        break;
     case RED:
         this->setText("red");
         break;
@@ -48,6 +54,14 @@ void ImageTreeItem::initFont()
         font.setPointSize(font.pointSize()+1);
         break;
     case DEHAZE_IMAGE:
+        font.setBold(true);
+        font.setPointSize(font.pointSize());
+        break;
+    case DEHAZE_IMAGE_TRANSMISSION_IMAGE:
+        font.setBold(true);
+        font.setPointSize(font.pointSize());
+        break;
+    case DEHAZE_IMAGE_DCIMAGE:
         font.setBold(true);
         font.setPointSize(font.pointSize());
         break;

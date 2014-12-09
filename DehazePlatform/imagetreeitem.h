@@ -12,7 +12,9 @@ public:
         GREEN,
         BLUE,
         DEHAZE_IMAGE_ROOT,
-        DEHAZE_IMAGE
+        DEHAZE_IMAGE,
+        DEHAZE_IMAGE_DCIMAGE,
+        DEHAZE_IMAGE_TRANSMISSION_IMAGE
     };
     ImageTreeItem(ItemType itype,ImageTreeItem* parent=0,QString &text = QString(""));
     const ImageTreeItem* parent() const {return parentItem;}
