@@ -43,9 +43,18 @@ void DarkChannelDehazor::Init()
 void DarkChannelDehazor::Process(cv::Mat &dehazeImage,cv::Mat &DCImage,cv::Mat &transmissionImage)
 {
     dehazeImage = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1);
-    DCImage = GenerateDarkImage();
+    DCImage = GenerateDarkImage().clone();
     GenerateAtmosphericRadiation();
     transmissionImage = GenereteTransmmision().clone();
+    GenerateDehazeImage(dehazeImage);
+}
+
+void DarkChannelDehazor::Process(cv::Mat &dehazeImage)
+{
+    dehazeImage = cv::Mat(rawImage.rows,rawImage.cols,CV_8UC1);
+    GenerateDarkImage();
+    GenerateAtmosphericRadiation();
+    GenereteTransmmision();
     GenerateDehazeImage(dehazeImage);
 }
 

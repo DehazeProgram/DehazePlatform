@@ -26,6 +26,7 @@ public:
     inline void setMaxAtmosphericRadiation(int a) {  _max_A =a;}
 
     void Process(cv::Mat &dehazeImage, cv::Mat &DCImage, cv::Mat &transmissionImage);
+    void Process(cv::Mat &dehazeImage);
 
 private:
     cv::Mat rawImage;
