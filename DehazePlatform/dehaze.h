@@ -10,7 +10,7 @@ class Dehaze
 public:
     Dehaze();
     virtual ~Dehaze() = 0;
-    inline cv::Mat GetDahezeImage() {return dehazeImage;}
+    inline cv::Mat& GetDahezeImage() {return dehazeImage;}
 private:
     cv::Mat dehazeImage;
 

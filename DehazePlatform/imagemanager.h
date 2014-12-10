@@ -46,7 +46,8 @@ private:
 
     void ShowImage(QPixmap &pixmap);
     void ShowImage();
-    void ConvertCvMatToGrayPixmaps(cv::Mat &mat, QVector<QPixmap> &pixmaps);
+    void ConvertCvMatToGrayPixmaps(const cv::Mat &mat, QVector<QPixmap> &pixmaps);
+    void ConvertCvMatToGrayPixmaps(const cv::Mat &mat, QPixmap &pixmap);
     QImage const copy_mat_to_qimage(cv::Mat const &mat);
 };
 

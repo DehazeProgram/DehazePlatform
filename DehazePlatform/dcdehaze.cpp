@@ -6,7 +6,8 @@ DCDehaze::DCDehaze()
 
 DCDehaze::~DCDehaze()
 {
-
+    darkChannelImage.release();
+    transmissionImage.release();
 }
 
 

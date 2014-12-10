@@ -58,7 +58,7 @@ void ImageTreeModel::LoadDehazeImage(MainWindow::DehazeType type,QString& text)
         if(!DCDehazeImageItem)
         {
             DCDehazeImageItem = new ImageTreeItem
-                    (ImageTreeItem::DEHAZE_IMAGE_ROOT,rootItem,QString("Dark Channel Dehaze Image"));
+                    (ImageTreeItem::DC_DEHAZE_IMAGE_ROOT,rootItem,QString("Dark Channel Dehaze Image"));
             rootItem->appendRow(DCDehazeImageItem);
         }
         ImageTreeItem* imageItem = new ImageTreeItem(ImageTreeItem::DEHAZE_IMAGE,DCDehazeImageItem,text);

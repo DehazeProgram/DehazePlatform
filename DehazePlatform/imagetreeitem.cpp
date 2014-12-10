@@ -15,7 +15,7 @@ void ImageTreeItem::initText(QString &text)
     case IMAGE_ROOT:
         this->setText(text);
         break;
-    case DEHAZE_IMAGE_ROOT:
+    case DC_DEHAZE_IMAGE_ROOT:
         this->setText(text);
         break;
     case DEHAZE_IMAGE:
@@ -49,7 +49,7 @@ void ImageTreeItem::initFont()
         font.setBold(true);
         font.setPointSize(font.pointSize()+2);
         break;
-    case DEHAZE_IMAGE_ROOT:
+    case DC_DEHAZE_IMAGE_ROOT:
         font.setBold(true);
         font.setPointSize(font.pointSize()+1);
         break;
@@ -90,7 +90,7 @@ void ImageTreeItem::initColor()
     case IMAGE_ROOT:
         brush.setColor(QColor(Qt::red));
         break;
-    case DEHAZE_IMAGE_ROOT:
+    case DC_DEHAZE_IMAGE_ROOT:
         brush.setColor(QColor(Qt::red));
         break;
     case DEHAZE_IMAGE:

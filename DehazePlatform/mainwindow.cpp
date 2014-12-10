@@ -46,6 +46,7 @@ void MainWindow::on_actionOpen_triggered()
     ui->treeView->expandAll();
 
     connect(ui->treeView,SIGNAL(doubleClicked(QModelIndex)),imgManager,SLOT(ShowChannelImage(QModelIndex)));
+    connect(ui->treeView,SIGNAL(doubleClicked(QModelIndex)),ui->treeView,SLOT(expandAll()));
     connect(this,SIGNAL(DehazeFinish(MainWindow::DehazeType)),imgManager,SLOT(LoadDehazeImage(MainWindow::DehazeType)));
 }
 

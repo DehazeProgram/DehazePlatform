@@ -1,6 +1,7 @@
 #include "imagemanager.h"
 #include "imagetreemodel.h"
 #include "imagetreeitem.h"
+#include "dcdehaze.h"
 #include <QDebug>
 #include <opencv2/opencv.hpp>
 #include <QGraphicsScene>
@@ -65,34 +66,73 @@ void ImageManager::ShowChannelImage(QModelIndex index)
      * this slot function is connected with item's
      * doubleclicks signal in mainwindow.cpp */
 
-    //create simple channel image as QImage set to scene
-    QVector<QPixmap> channelPixmaps;
-    QPixmap redPixmap = QPixmap();
-    QPixmap greenPixmap = QPixmap();
-    QPixmap bluePixmap = QPixmap();
-    channelPixmaps.push_back(redPixmap);
-    channelPixmaps.push_back(greenPixmap);
-    channelPixmaps.push_back(bluePixmap);
-
-    ConvertCvMatToGrayPixmaps(image,channelPixmaps);
     ImageTreeItem* item = (ImageTreeItem*)(model->itemFromIndex(index));
-    switch (item->getType()) {
-    case ImageTreeItem::IMAGE_ROOT:
-    {
-        QPixmap pixmap =QPixmap(imagePath);
-        ShowImage(pixmap);
-        break;
-    }
-    case ImageTreeItem::RED:
-        ShowImage(channelPixmaps[0]);
-        break;
-    case ImageTreeItem::BLUE:
-        ShowImage(channelPixmaps[1]);
-        break;
-    case ImageTreeItem::GREEN:
-        ShowImage(channelPixmaps[2]);
-        break;
 
+    //create simple channel image as QImage set to scene
+    if ((item->getType() == ImageTreeItem::IMAGE_ROOT||item->parent()->getType() == ImageTreeItem::IMAGE_ROOT))
+    {
+        QVector<QPixmap> channelPixmaps;
+        QPixmap redPixmap = QPixmap();
+        QPixmap greenPixmap = QPixmap();
+        QPixmap bluePixmap = QPixmap();
+        channelPixmaps.push_back(redPixmap);
+        channelPixmaps.push_back(greenPixmap);
+        channelPixmaps.push_back(bluePixmap);
+
+        ConvertCvMatToGrayPixmaps(image,channelPixmaps);
+        switch (item->getType()) {
+        case ImageTreeItem::IMAGE_ROOT:
+        {
+            ShowImage();
+            break;
+        }
+        case ImageTreeItem::RED:
+            ShowImage(channelPixmaps[0]);
+            break;
+        case ImageTreeItem::BLUE:
+            ShowImage(channelPixmaps[1]);
+            break;
+        case ImageTreeItem::GREEN:
+            ShowImage(channelPixmaps[2]);
+            break;
+        }
+    }
+    else if (item->parent()->getType() == ImageTreeItem::DC_DEHAZE_IMAGE_ROOT||item->parent()->parent()->getType() == ImageTreeItem::DC_DEHAZE_IMAGE_ROOT)
+    {
+        switch (item->getType()) {
+        case ImageTreeItem::DEHAZE_IMAGE:
+        {
+            QPixmap pixmap;
+            ConvertCvMatToGrayPixmaps(dehazeImages->GetDahezeImage(),pixmap);
+            ShowImage(pixmap);
+            break;
+        }
+
+        case ImageTreeItem::DEHAZE_IMAGE_DCIMAGE:
+        {
+            QPixmap pixmap;
+            ConvertCvMatToGrayPixmaps(((DCDehaze*)dehazeImages)->GetDarkChannelImage(),pixmap);
+            ShowImage(pixmap);
+            break;
+        }
+
+        case ImageTreeItem::DEHAZE_IMAGE_TRANSMISSION_IMAGE:
+        {
+            QPixmap pixmap;
+            cv::Mat mat = ((DCDehaze*)dehazeImages)->GetTransmissionImage();
+            cv::Mat mat_255 = cv::Mat(mat.rows,mat.cols,CV_32FC1,cv::Scalar(255.0));
+            cv::Mat mat_UC8 = cv::Mat(mat.rows,mat.cols,CV_32FC1) ;
+            cv::multiply(mat,mat_255,mat_UC8);
+            mat_UC8.convertTo(mat_UC8,CV_8UC1);
+            ConvertCvMatToGrayPixmaps(mat_UC8,pixmap);
+            ShowImage(pixmap);
+            break;
+        }
+        }
+    }
+    else
+    {
+        qDebug()<<"haha";
     }
 
 }
@@ -106,6 +146,7 @@ void ImageManager::RemoveImage()
 
 void ImageManager::LoadDehazeImage(MainWindow::DehazeType type)
 {
+
     emit LoadDehazeImageItem(type,window->ui->DCNamelineEdit->text());
 }
 
@@ -113,14 +154,19 @@ void ImageManager::ShowImage(QPixmap &pixmap)
 {
     if (window->pxmapItem)
         scene->removeItem((QGraphicsItem*)(window->pxmapItem));
+
     window->pxmapItem = scene->addPixmap(pixmap);
     window->ui->graphicsView->setScene(scene);
     window->ui->graphicsView->fitInView((QGraphicsItem *)window->pxmapItem,Qt::KeepAspectRatio);
     window->ui->graphicsView->ensureVisible((QGraphicsItem *)window->pxmapItem);
+
 }
 
 void ImageManager::ShowImage()
 {
+
+    if (window->pxmapItem)
+        scene->removeItem((QGraphicsItem*)(window->pxmapItem));
     QPixmap p =  QPixmap(imagePath);
     p.load(imagePath);
     if(p.isNull())
@@ -131,7 +177,7 @@ void ImageManager::ShowImage()
     window->ui->graphicsView->show();
 }
 
-void ImageManager::ConvertCvMatToGrayPixmaps(cv::Mat &mat,QVector<QPixmap> &pixmaps)
+void ImageManager::ConvertCvMatToGrayPixmaps(const cv::Mat &mat,QVector<QPixmap> &pixmaps)
 {
     assert(mat.channels() == 3 && mat.type() == CV_8UC3);
     QImage img = copy_mat_to_qimage(mat);
@@ -152,12 +198,53 @@ void ImageManager::ConvertCvMatToGrayPixmaps(cv::Mat &mat,QVector<QPixmap> &pixm
             bImg.setPixel(i,j,qRgb(qRed(rgb),qRed(rgb),qRed(rgb)));
         }
     }
-
     pixmaps[0] = QPixmap::fromImage(rImg);
     pixmaps[1] = QPixmap::fromImage(gImg);
     pixmaps[2] = QPixmap::fromImage(bImg);
 
 }
+
+void ImageManager::ConvertCvMatToGrayPixmaps(const cv::Mat &mat, QPixmap &pixmap)
+{
+    assert((mat.channels() == 3 || mat.channels() == 1)&& mat.type() == CV_8UC3);
+    if(mat.channels() == 3)
+    {
+        std::vector<cv::Mat> vec;
+        cv::split(mat,vec);
+        QSize size(mat.cols,mat.rows);
+        QImage img(size,QImage::Format_RGB888);
+
+        for(int i = 0;i < mat.rows; ++i)
+        {
+            for(int j = 0;j < mat.cols; ++j)
+            {
+                int r = vec[2].at<uchar>(i,j);
+                int g = vec[1].at<uchar>(i,j);
+                int b = vec[0].at<uchar>(i,j);
+                img.setPixel(j,i,qRgb(r,g,b));
+            }
+        }
+        pixmap = QPixmap::fromImage(img);
+        return;
+    }
+    else if(mat.channels() ==1)
+    {
+        QSize size(mat.cols,mat.rows);
+        QImage img(size,QImage::Format_RGB888);
+
+        for(int i = 0;i < mat.rows; ++i)
+        {
+            for(int j = 0;j < mat.cols; ++j)
+            {
+                int gray = mat.at<uchar>(i,j);
+                img.setPixel(j,i,qRgb(gray,gray,gray));
+            }
+        }
+        pixmap = QPixmap::fromImage(img);
+        return;
+    }
+}
+
 
 const QImage ImageManager::copy_mat_to_qimage(const cv::Mat &mat)
 {

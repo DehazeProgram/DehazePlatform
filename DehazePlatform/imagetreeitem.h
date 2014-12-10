@@ -11,7 +11,7 @@ public:
         RED,
         GREEN,
         BLUE,
-        DEHAZE_IMAGE_ROOT,
+        DC_DEHAZE_IMAGE_ROOT,
         DEHAZE_IMAGE,
         DEHAZE_IMAGE_DCIMAGE,
         DEHAZE_IMAGE_TRANSMISSION_IMAGE

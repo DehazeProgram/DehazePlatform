@@ -6,5 +6,5 @@ Dehaze::Dehaze()
 
 Dehaze::~Dehaze()
 {
-
+    dehazeImage.release();
 }
