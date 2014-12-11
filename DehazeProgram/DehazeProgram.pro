@@ -20,6 +20,13 @@ else:unix: LIBS += -LC:/OSGeo4W64/lib/ -lopencv_core -lopencv_highgui
 INCLUDEPATH += C:/OSGeo4W64/include
 DEPENDPATH += C:/OSGeo4W64/include
 
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../OSGeo4W64/lib/ -lgdal_i
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../OSGeo4W64/lib/ -lgdal_id
+else:unix: LIBS += -L$$PWD/../../../../OSGeo4W64/lib/ -lgdal_i
+
+INCLUDEPATH += $$PWD/../../../../OSGeo4W64/include
+DEPENDPATH += $$PWD/../../../../OSGeo4W64/include
+
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/ColorFactory/ -lColorFactory

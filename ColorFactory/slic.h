@@ -4,10 +4,11 @@
 #include <iostream>
 #include <vector>
 #include <gdal_priv.h>
+#include "colorfactory_global.h"
 
 typedef std::vector<double> FeatureVector;
 
-class Slic
+class SLIC_SHARED_EXPORT Slic
 {
 public:
     Slic(GDALDataset* &poSrcDS,GDALDataset* &poDstDS,int regionSize,double regularizer);

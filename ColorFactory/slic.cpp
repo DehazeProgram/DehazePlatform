@@ -222,8 +222,8 @@ double Slic::_ComputeDistance(const FeatureVector &vec1, const FeatureVector &ve
     double dis = 0;
     for (unsigned int i=0;i<vec1.size();++i)
     {
-//        dis += (vec1[i]-vec2[i])*(vec1[i]-vec2[i]);
-        dis += abs(vec1[i]-vec2[i]);
+        dis += (vec1[i]-vec2[i])*(vec1[i]-vec2[i]);
+//        dis += abs(vec1[i]-vec2[i]);
     }
     return dis;
 }
