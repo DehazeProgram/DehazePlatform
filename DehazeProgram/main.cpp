@@ -5,11 +5,11 @@
 #include "slic.h"
 
 using namespace std;
-
+//"C:\\hr\\experiment\\images\\1.bmp" "C:\\hr\\experiment\\images\\sgm.tif"
 int main(int argc,char **argv)
 {
-    SlicBaseDehaze dehaze(std::string(argv[1]),std::string(argv[2]),150,1,0.01,220);
-    dehaze.process();
+    SlicBaseDehaze dehaze =SlicBaseDehaze();
+    dehaze.Segmentation(argv[1],argv[2],30,100.0);
 
     return 0;
 }
