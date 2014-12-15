@@ -36,7 +36,7 @@ private:
 
     int _minFliterWindowSize;
     int _guideFliterWindowSize;
-    float _max_A;
+    uchar _max_A;
     float _eps;
     float _t0;
     ARadiation_DC _A;
